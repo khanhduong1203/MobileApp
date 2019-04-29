@@ -27,14 +27,14 @@ export default class Card extends React.Component {
         </View>
       );
     }
+}
+const styles = StyleSheet.create({
+  card: {
+    flex: 1,
+    alignItems: 'center'
+  },
+  card_text: {
+    fontSize: 50,
+    fontWeight: 'bold'
   }
-  const styles = StyleSheet.create({
-    card: {
-      flex: 1,
-      alignItems: 'center'
-    },
-    card_text: {
-      fontSize: 50,
-      fontWeight: 'bold'
-    }
-  });
+});

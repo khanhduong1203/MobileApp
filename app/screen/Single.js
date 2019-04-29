@@ -1,119 +1,61 @@
 import React from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Button, Text, TouchableHighlight,TouchableOpacity } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons'; // 6.2.2
 
 import Header from '../components/Header';
 import Score from '../components/Score';
 import Card from '../components/Card';
+import ModalResult from '../components/Modal';
+import Modal from "react-native-modal"
 
 import helper from '../helpers';
-
+import cardlib from '../cardlib'
 export default class Single extends React.Component {
 
   constructor(props) {
     super(props);
     this.renderCards = this.renderCards.bind(this);
     this.resetCards = this.resetCards.bind(this);
-   
     let sources = {
       'fontawesome': FontAwesome,
       'entypo': Entypo,
       'ionicons': Ionicons
     };
-
-    let cards = [
-      {
-        src: 'fontawesome',
-        name: 'apple',
-        color: 'red'
-      },
-      {
-        src: 'entypo',
-        name: 'feather',
-        color: '#7d4b12'
-      },
-      {
-        src: 'entypo',
-        name: 'flashlight',
-        color: '#f7911f'
-      },
-      {
-        src: 'entypo',
-        name: 'flower',
-        color: '#37b24d'
-      },
-      {
-        src: 'entypo',
-        name: 'moon',
-        color: '#ffd43b'
-      },
-      {
-        src: 'entypo',
-        name: 'youtube',
-        color: '#FF0000'
-      },
-      {
-        src: 'entypo',
-        name: 'shop',
-        color: '#5f5f5f'
-      },
-      {
-        src: 'fontawesome',
-        name: 'github',
-        color: '#24292e'
-      },
-      {
-        src: 'fontawesome',
-        name: 'skype',
-        color: '#1686D9'
-      },
-      {
-        src: 'fontawesome',
-        name: 'send',
-        color: '#1c7cd6'
-      },
-      {
-        src: 'ionicons',
-        name: 'ios-magnet',
-        color: '#d61c1c'
-      },
-      {
-        src: 'ionicons',
-        name: 'logo-facebook',
-        color: '#3C5B9B'
-      }
-    ];
-
+    this.num = 2 //2 4 6 8 10 12
+    let cards = cardlib.slice(0,this.num)
     let clone = JSON.parse(JSON.stringify(cards));
+    var lcards = cards.concat(clone);
 
-    this.cards = cards.concat(clone);
-    this.cards.map((obj) => {
+    lcards.map((obj) => {
       let id = Math.random().toString(36).substring(7);
-      console.log(id)
       obj.id = id;
       obj.src = sources[obj.src];
       obj.is_open = false;
     });
 
-    this.cards = this.cards.shuffle(); 
+    lcards = lcards.shuffle(); 
     this.state = {
       current_selection: [],
       selected_pairs: [],
       score: 0,
-      cards: this.cards
+      level: 1,
+      turn: 3,
+      cards: lcards,
+      num : this.num,
+      isModalVisible: false
     }
-  
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <Header />
+        <Header type='Single Player' level={this.state.level} />
         <View style={styles.body}>
           { 
             this.renderRows.call(this) 
           }
         </View>
+        <ModalResult isModalVisible={this.state.isModalVisible} onModal = {this.onModal}/>
         <Score score={this.state.score} />
         <Button
           onPress={this.resetCards}
@@ -124,6 +66,9 @@ export default class Single extends React.Component {
     );
   }
   
+  onModal = () =>{
+    this.setState({ isModalVisible: !this.state.isModalVisible });
+  }
 
   resetCards() {
     let cards = this.cards.map((obj) => {
@@ -153,10 +98,11 @@ export default class Single extends React.Component {
       );
     });
    
-  }
+  } 
 
 
   renderCards(cards) {
+    //console.log(cards)
     return cards.map((card, index) => {
       return (
         <Card 
@@ -171,54 +117,99 @@ export default class Single extends React.Component {
     });
   }
 
+  getLib(number){
+    var lastIndex = 0
+    for(let i=2;i<=number;i+=2){
+      lastIndex+=i
+    }
+    // number = 2  =>     array[0..1]        splice(0,2)
+    //          4         array[2...5]       splice(2,6)
+    //          6         array[6...11]      splice(6,12)
+    //          8         array[12...19]     splice(12,20)
+    //          10         array[20...29]    splice(20,30)
+    //          12         array[30...41]    splice(30,42)
+    //number  4 6 8 10 12 
+    let newCards = cardlib.slice(lastIndex-number,lastIndex)
+    let newClone = JSON.parse(JSON.stringify(newCards));
+    newCards = newCards.concat(newClone);
+    let sources = {
+      'fontawesome': FontAwesome,
+      'entypo': Entypo,
+      'ionicons': Ionicons 
+    }
+    newCards.map((obj) => {
+      let id = Math.random().toString(36).substring(7);
+      obj.id = id;
+      obj.src = sources[obj.src];
+      obj.is_open = false;
+    })
+
+    newCards = newCards.shuffle();
+
+    return newCards
+  }
 
   clickCard(id) {
-    let selected_pairs = this.state.selected_pairs;
-    let current_selection = this.state.current_selection;
-    let score = this.state.score;
-
-    let index = this.state.cards.findIndex((card) => {
+    this.onModal()
+    var _selected_pairs = this.state.selected_pairs;
+    var _current_selection = this.state.current_selection;
+    var _score = this.state.score;
+    var _num = this.state.num
+    var _level = this.state.level
+    var _turn = this.state.turn
+    let index = this.state.cards.findIndex((card) => { 
       return card.id == id;
     });
 
-    let cards = this.state.cards;
-    
-    if(cards[index].is_open == false && selected_pairs.indexOf(cards[index].name) === -1){
+    var _cards = this.state.cards;
+    if(_cards[index].is_open === false && _selected_pairs.indexOf(_cards[index].name) === -1){
 
-      cards[index].is_open = true;
-      
-      current_selection.push({ 
+      _cards[index].is_open = true;
+    
+      _current_selection.push({    
         index: index,
-        name: cards[index].name
+        name: _cards[index].name
       });
 
-      if(current_selection.length == 2){
-        if(current_selection[0].name == current_selection[1].name){
-          score += 1;
-          selected_pairs.push(cards[index].name);
-        }else{
-         
-          cards[current_selection[0].index].is_open = false;
+      if(_current_selection.length == 2){
+        if(_current_selection[0].name == _current_selection[1].name){
+          _score += 1;
+          _selected_pairs.push(_cards[index].name);
+        }else{     
+          _cards[_current_selection[0].index].is_open = false;
 
           setTimeout(() => {
-            cards[index].is_open = false;
+            _cards[index].is_open = false;
             this.setState({
-              cards: cards
+              cards: _cards
             });
           }, 500);
         }
 
-        current_selection = [];
+        _current_selection = [];
       }
-
+      if(_selected_pairs.length===_num){
+        _num +=2
+        _level +=1
+        let newCards = this.getLib(_num)
+        //console.log(newCards)
+        _cards = newCards
+        //console.log(this.state.cards)
+        _selected_pairs=[]
+        _current_selection=[]
+      }
+      if(_score==42){
+        this.onModal()
+      }
       this.setState({
-        score: score,
-        cards: cards,
-        current_selection: current_selection
-      });
-
+        score: _score,
+        level: _level,
+        cards: _cards,
+        current_selection: _current_selection,
+        selected_pairs: _selected_pairs,
+        num: _num
+      })
     }
-  
   }
 
 
@@ -229,7 +220,11 @@ export default class Single extends React.Component {
     cards.forEach((item) => {
       count += 1;
       contents.push(item);
-      if(count == 4){
+      if(this.state.num===2 && count == this.state.num){
+        contents_r.push(contents)
+        count = 0;
+        contents = [];
+      }else if(this.state.num > 2 && count === 4){
         contents_r.push(contents)
         count = 0;
         contents = [];

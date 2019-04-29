@@ -6,7 +6,7 @@ export default class Header extends React.Component {
   render() {
     return (
       <View style={styles.header}>
-        <Text style={styles.header_text}>MemoryGame</Text>
+        <Text style={styles.header_text}>{this.props.type +' - LEVEL '+ this.props.level}</Text>
       </View>
     );
   }
