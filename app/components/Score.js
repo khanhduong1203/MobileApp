@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     margin:25
   },
   score: {
-    fontSize: 40,
+    fontSize: 20,
     fontWeight: 'bold'
   }
 });

@@ -1,24 +1,43 @@
 import React from 'react'
 import Modal from "react-native-modal"
-import { StyleSheet, View, Button, Text,TouchableOpacity,TextInput } from 'react-native';
+import { StyleSheet, View, AsyncStorage, Text,TouchableOpacity,TextInput } from 'react-native';
 export default class ModalResult extends React.Component{
-    // state = {
-    //     isModalVisible: this.props.isModalVisible,
-    // };
+    state ={
+        name:''
+    }
+    onPressBtn = () =>{
+        this.saveScore()
+        this.setState({name:''})
+    }
     
-    _toggleModal = () =>
-        this.props.isModalVisible = !this.props.isModalVisible 
+    saveScore = () => {
+        const {navigate} = this.props;
+        if(this.state.name!==''){
+            let item = {userName:this.state.name,highScore:this.props.score}
+            AsyncStorage.setItem(this.state.name,JSON.stringify(item));
+            this.props.onModal()
+            alert("Saved"+'\n'+JSON.stringify(item))
+            navigate('HighScore')
+        }else{
+            alert('Enter your name')
+        }
+    }
+
+    setName =(value)=>{
+        this.setState({ name: value });
+    }
     
     render(){
+        
         return(
             <View>
                 <Modal isVisible={this.props.isModalVisible}>
                     <View style={styles.modal}>
-                        <Text style={styles.text}>YOU WIN !!!</Text>
+                        <Text style={styles.text}>{this.props.text}</Text>
                         <TextInput
-                            style={styles.formInput}
-                            placeholder='username'/>
-                        <TouchableOpacity style={styles.btn} onPress={this.props.onModal}>
+                            style={styles.formInput} onChangeText={this.setName}
+                            placeholder='your name'/>
+                        <TouchableOpacity style={styles.btn} onPress={this.onPressBtn}>
                             <Text style={styles.textBtn}>High Score!</Text>
                         </TouchableOpacity>
                     </View>
@@ -26,6 +45,7 @@ export default class ModalResult extends React.Component{
             </View>
         )
     }
+
 }
 
 var styles = StyleSheet.create({

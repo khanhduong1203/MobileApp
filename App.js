@@ -5,17 +5,14 @@ import {createStackNavigator, createAppContainer} from 'react-navigation';
 import Single from './app/screen/Single';
 import Multi from './app/screen/Multi';
 import Home from './app/screen/Home';
+import HighScore from './app/screen/HighScore';
 
 const MainNavigator = createStackNavigator(
   {
-    Home: {
-      screen: Home,
-      navigationOptions: {
-        title: 'Home',
-      }
-    },
+    Home: {screen: Home},
     Single: {screen: Single},
-    Multi: {screen: Multi}
+    Multi: {screen: Multi},
+    HighScore: {screen: HighScore}
   },
   {
     initialRouteName: 'Home',
@@ -24,7 +21,7 @@ const MainNavigator = createStackNavigator(
       header:null,
       navigationOptions: {
         headerVisible: false,
-    }
+      }
     }
   }
 

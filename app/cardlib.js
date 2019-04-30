@@ -1,4 +1,4 @@
-var cardlib = [
+const cardlib = [
   {
     src: 'fontawesome',
     name: 'apple',
@@ -182,4 +182,4 @@ var cardlib = [
   }
 ];
 
-export default cardlib;
+export default cardlib
