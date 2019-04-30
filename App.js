@@ -6,11 +6,29 @@ import Single from './app/screen/Single';
 import Multi from './app/screen/Multi';
 import Home from './app/screen/Home';
 
-const MainNavigator = createStackNavigator({
-  Home: {screen: Home},
-  Single: {screen: Single},
-  Multi: {screen: Multi}
-});
+const MainNavigator = createStackNavigator(
+  {
+    Home: {
+      screen: Home,
+      navigationOptions: {
+        title: 'Home',
+      }
+    },
+    Single: {screen: Single},
+    Multi: {screen: Multi}
+  },
+  {
+    initialRouteName: 'Home',
+    defaultNavigationOptions: {
+      headerMode: 'none',
+      header:null,
+      navigationOptions: {
+        headerVisible: false,
+    }
+    }
+  }
+
+);
 
 const App = createAppContainer(MainNavigator);
 

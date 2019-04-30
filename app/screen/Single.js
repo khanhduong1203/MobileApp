@@ -5,7 +5,7 @@ import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons'; // 6.2.2
 import Header from '../components/Header';
 import Score from '../components/Score';
 import Card from '../components/Card';
-import ModalResult from '../components/Modal';
+import ModalResult from '../components/ModalResult';
 import Modal from "react-native-modal"
 
 import helper from '../helpers';
@@ -15,7 +15,8 @@ export default class Single extends React.Component {
   constructor(props) {
     super(props);
     this.renderCards = this.renderCards.bind(this);
-    this.resetCards = this.resetCards.bind(this);
+    //this.resetCards = this.resetCards.bind(this);
+    this.stopGame = this.stopGame.bind(this)
     let sources = {
       'fontawesome': FontAwesome,
       'entypo': Entypo,
@@ -58,9 +59,9 @@ export default class Single extends React.Component {
         <ModalResult isModalVisible={this.state.isModalVisible} onModal = {this.onModal}/>
         <Score score={this.state.score} />
         <Button
-          onPress={this.resetCards}
-          title="Reset"
-          color="#008CFA" 
+          onPress={this.stopGame}
+          title="Stop"
+          color="#EF1457" 
         />
       </View>
     );
@@ -70,21 +71,25 @@ export default class Single extends React.Component {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
-  resetCards() {
-    let cards = this.cards.map((obj) => {
-      obj.is_open = false;
-      return obj;
-    });
-
-    cards = cards.shuffle();
-
-    this.setState({
-      current_selection: [],
-      selected_pairs: [],
-      cards: cards,
-      score: 0
-    });
+  stopGame =()=>{
+    this.onModal()
   }
+
+  // resetCards() {
+  //   let cards = this.cards.map((obj) => {
+  //     obj.is_open = false;
+  //     return obj;
+  //   });
+
+  //   cards = cards.shuffle();
+
+  //   this.setState({
+  //     current_selection: [],
+  //     selected_pairs: [],
+  //     cards: cards,
+  //     score: 0
+  //   });
+  // }
 
 
   renderRows() {
@@ -150,7 +155,6 @@ export default class Single extends React.Component {
   }
 
   clickCard(id) {
-    this.onModal()
     var _selected_pairs = this.state.selected_pairs;
     var _current_selection = this.state.current_selection;
     var _score = this.state.score;
@@ -189,17 +193,17 @@ export default class Single extends React.Component {
         _current_selection = [];
       }
       if(_selected_pairs.length===_num){
+        //this.onModal()
         _num +=2
         _level +=1
         let newCards = this.getLib(_num)
-        //console.log(newCards)
         _cards = newCards
-        //console.log(this.state.cards)
         _selected_pairs=[]
         _current_selection=[]
       }
       if(_score==42){
         this.onModal()
+        num-=2
       }
       this.setState({
         score: _score,
