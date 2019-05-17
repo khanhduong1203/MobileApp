@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button, Text, TouchableHighlight,TouchableOpacity,AsyncStorage } from 'react-native';
+import { StyleSheet, View, Button,BackHandler,Text, Alert} from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons'; // 6.2.2
 
 import Header from '../components/Header';
@@ -7,7 +7,7 @@ import Score from '../components/Score';
 import Card from '../components/Card';
 import ModalResult from '../components/ModalResult';
 import Modal from "react-native-modal"
-
+//import * as cardlib from './../cardlib'
 import helper from '../helpers';
 export default class Single extends React.Component {
 
@@ -18,201 +18,197 @@ export default class Single extends React.Component {
     this.stopGame = this.stopGame.bind(this)
     //this.onModal = this.onModal.bind(this)
     // this.num = 2 //2 4 6 8 10 12
-    this.state={
-      lib:[
-        {
-          src: 'fontawesome',
-          name: 'apple',
-          color: 'red'
-        },
-        {
-          src: 'entypo',
-          name: 'feather',
-          color: '#7d4b12'
-        },
-        {
-          src: 'entypo',
-          name: 'flashlight',
-          color: '#f7911f'
-        },
-        {
-          src: 'entypo',
-          name: 'flower',
-          color: '#37b24d'
-        },
-        {
-          src: 'entypo',
-          name: 'moon',
-          color: '#ffd43b'
-        },
-        {
-          src: 'entypo',
-          name: 'youtube',
-          color: '#FF0000'
-        },
-        {
-          src: 'entypo',
-          name: 'shop',
-          color: '#5f5f5f'
-        },
-        {
-          src: 'fontawesome',
-          name: 'github',
-          color: '#24292e'
-        },
-        {
-          src: 'fontawesome',
-          name: 'skype',
-          color: '#1686D9'
-        },
-        {
-          src: 'fontawesome',
-          name: 'send',
-          color: '#1c7cd6'
-        },
-        {
-          src: 'ionicons',
-          name: 'ios-magnet',
-          color: '#d61c1c'
-        },
-        {
-          src: 'ionicons',
-          name: 'logo-facebook',
-          color: '#3C5B9B'
-        },
-        {
-          src: 'fontawesome',
-          name: 'barcode',
-          color: 'grey'
-        },{
-          src: 'fontawesome',
-          name: 'download',
-          color: 'black'
-        },{
-          src: 'fontawesome',
-          name: 'camera',
-          color: 'yellow'
-        },{
-          src: 'fontawesome',
-          name: 'gift',
-          color: 'blue'
-        },{
-          src: 'fontawesome',
-          name: 'glass',
-          color: 'orange'
-        },{
-          src: 'fontawesome',
-          name: 'arrow-up',
-          color: 'green'
-        },{
-          src: 'fontawesome',
-          name: 'money',
-          color: 'brown'
-        },{
-          src: 'fontawesome',
-          name: 'undo',
-          color: 'pink'
-        },{
-          src: 'fontawesome',
-          name: 'bullseye',
-          color: 'purple'
-        },{
-          src: 'fontawesome',
-          name: 'dollar',
-          color: 'green'
-        },{
-          src: 'fontawesome',
-          name: 'rupee',
-          color: '#6DEA26'
-        },{
-          src: 'fontawesome',
-          name: 'bell-o',
-          color: '#0BF3DE'
-        },{
-          src: 'fontawesome',
-          name: 'weibo',
-          color: '#F1FA2B'
-        },{
-          src: 'fontawesome',
-          name: 'keyboard-o',
-          color: '#0B245B'
-        },{
-          src: 'fontawesome',
-          name: 'folder',
-          color: '#EB28F7'
-        },{
-          src: 'fontawesome',
-          name: 'shower',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'window-close-o',
-          color: 'yellow'
-        },{
-          src: 'fontawesome',
-          name: 'imdb',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'microchip',
-          color: 'grey'
-        },{
-          src: 'fontawesome',
-          name: 'superpowers',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'bandcamp',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'bluetooth',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'vcard',
-          color: '#67F51B'
-        },{
-          src: 'fontawesome',
-          name: 'deaf',
-          color: '#DF960E'
-        },{
-          src: 'fontawesome',
-          name: 'linode',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'etsy',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'percent',
-          color: 'green'
-        },{
-          src: 'fontawesome',
-          name: 'gitlab',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'usb',
-          color: 'red'
-        },{
-          src: 'fontawesome',
-          name: 'stop-circle',
-          color: 'blue'
-        }
-      ]
-    }
-  }
-
-  componentWillMount(){
+    var lib=[
+      {
+        src: 'fontawesome',
+        name: 'apple',
+        color: 'red'
+      },
+      {
+        src: 'entypo',
+        name: 'feather',
+        color: '#7d4b12'
+      },
+      {
+        src: 'entypo',
+        name: 'flashlight',
+        color: '#f7911f'
+      },
+      {
+        src: 'entypo',
+        name: 'flower',
+        color: '#37b24d'
+      },
+      {
+        src: 'entypo',
+        name: 'moon',
+        color: '#ffd43b'
+      },
+      {
+        src: 'entypo',
+        name: 'youtube',
+        color: '#FF0000'
+      },
+      {
+        src: 'entypo',
+        name: 'shop',
+        color: '#5f5f5f'
+      },
+      {
+        src: 'fontawesome',
+        name: 'github',
+        color: '#24292e'
+      },
+      {
+        src: 'fontawesome',
+        name: 'skype',
+        color: '#1686D9'
+      },
+      {
+        src: 'fontawesome',
+        name: 'send',
+        color: '#1c7cd6'
+      },
+      {
+        src: 'ionicons',
+        name: 'ios-magnet',
+        color: '#d61c1c'
+      },
+      {
+        src: 'ionicons',
+        name: 'logo-facebook',
+        color: '#3C5B9B'
+      },
+      {
+        src: 'fontawesome',
+        name: 'barcode',
+        color: 'grey'
+      },{
+        src: 'fontawesome',
+        name: 'download',
+        color: 'black'
+      },{
+        src: 'fontawesome',
+        name: 'camera',
+        color: 'yellow'
+      },{
+        src: 'fontawesome',
+        name: 'gift',
+        color: 'blue'
+      },{
+        src: 'fontawesome',
+        name: 'glass',
+        color: 'orange'
+      },{
+        src: 'fontawesome',
+        name: 'arrow-up',
+        color: 'green'
+      },{
+        src: 'fontawesome',
+        name: 'money',
+        color: 'brown'
+      },{
+        src: 'fontawesome',
+        name: 'undo',
+        color: 'pink'
+      },{
+        src: 'fontawesome',
+        name: 'bullseye',
+        color: 'purple'
+      },{
+        src: 'fontawesome',
+        name: 'dollar',
+        color: 'green'
+      },{
+        src: 'fontawesome',
+        name: 'rupee',
+        color: '#6DEA26'
+      },{
+        src: 'fontawesome',
+        name: 'bell-o',
+        color: '#0BF3DE'
+      },{
+        src: 'fontawesome',
+        name: 'weibo',
+        color: '#F1FA2B'
+      },{
+        src: 'fontawesome',
+        name: 'keyboard-o',
+        color: '#0B245B'
+      },{
+        src: 'fontawesome',
+        name: 'folder',
+        color: '#EB28F7'
+      },{
+        src: 'fontawesome',
+        name: 'shower',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'window-close-o',
+        color: 'yellow'
+      },{
+        src: 'fontawesome',
+        name: 'imdb',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'microchip',
+        color: 'grey'
+      },{
+        src: 'fontawesome',
+        name: 'superpowers',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'bandcamp',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'bluetooth',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'vcard',
+        color: '#67F51B'
+      },{
+        src: 'fontawesome',
+        name: 'deaf',
+        color: '#DF960E'
+      },{
+        src: 'fontawesome',
+        name: 'linode',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'etsy',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'percent',
+        color: 'green'
+      },{
+        src: 'fontawesome',
+        name: 'gitlab',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'usb',
+        color: 'red'
+      },{
+        src: 'fontawesome',
+        name: 'stop-circle',
+        color: 'blue'
+      }
+    ]
+  
     let sources = {
       'fontawesome': FontAwesome,
       'entypo': Entypo,
       'ionicons': Ionicons 
     };
     
-    let cards = this.state.lib.slice(0,2)
+    let cards = lib.slice(0,2)
     let clone = JSON.parse(JSON.stringify(cards));
     var clcards = cards.concat(clone);
 
@@ -224,21 +220,42 @@ export default class Single extends React.Component {
     });
 
     clcards = clcards.shuffle(); 
-    this.setState({
+    this.state={
       current_selection: [],
       selected_pairs: [],
       score: 0,
       level: 1,
       turn: 3,
+      timer: 5,
       cards: clcards,
       num : 2,
       isModalVisible: false,
-      modalNotify:''
-    })
+      modalNotify:'',
+      lib:lib
+    }
   }
-
-  render() {
+  componentDidMount(){
+    BackHandler.addEventListener('hardwareBackPress',()=>{
+        this.props.navigation.navigate('Home');
+        return true;
+    });
+    this.interval = setInterval(
+      () => this.setState((prevState)=> ({ timer: prevState.timer - 1 })),
+      1000
+    );
+  }
+  componentDidUpdate(){
+    if(this.state.timer === 0){ 
+      clearInterval(this.interval);
+    }
+  }
+  
+  componentWillUnmount(){
+   clearInterval(this.interval);
+  }
+  render() { 
     const {navigate} = this.props.navigation;
+    //setTimeout(function(){alert('Time up')}, this.state.time);
     return (
       <View style={styles.container}>
         <Header type='Single Player' level={this.state.level} />
@@ -247,10 +264,12 @@ export default class Single extends React.Component {
             this.renderRows.call(this) 
           }
         </View>
-        <ModalResult isModalVisible={this.state.isModalVisible} onModal = {this.onModal} 
+        <ModalResult style={{width:300}} isModalVisible={this.state.isModalVisible} onModal = {this.onModal} 
                      text={this.state.modalNotify} navigate = {navigate} score={this.state.score}
         />
         <Score score={this.state.score} />
+        <Text>Time: {this.state.timer}</Text>
+        <Text>Turn: {this.state.turn}</Text>
         <Button
           onPress={this.stopGame}
           title="Stop"
@@ -260,15 +279,15 @@ export default class Single extends React.Component {
     );
   }
   
-  onModal = () =>{
+  onModal = (message) =>{
     this.setState({ 
-      isModalVisible: !this.state.isModalVisible,  
+      modalNotify: message,
+      isModalVisible: !this.state.isModalVisible
     });
   }
 
   stopGame =()=>{
-    this.setState({modalNotify:'Sure?'})
-    this.onModal()
+    this.onModal('Sure?')
   }
 
   // resetCards() {
@@ -360,7 +379,9 @@ export default class Single extends React.Component {
     let index = this.state.cards.findIndex((card) => { 
       return card.id == id;
     });
-
+    if(_turn === 0){
+      this.onModal('Game Over')
+    }
     var _cards = this.state.cards;
     if(_cards[index].is_open === false && _selected_pairs.indexOf(_cards[index].name) === -1){
 
@@ -372,6 +393,8 @@ export default class Single extends React.Component {
       });
 
       if(_current_selection.length == 2){
+        _turn -=1
+        this.setState({turn:_turn})
         if(_current_selection[0].name == _current_selection[1].name){
           _score += 1;
           _selected_pairs.push(_cards[index].name);
@@ -397,9 +420,8 @@ export default class Single extends React.Component {
         _current_selection=[]
       }
       if(_score==42){
-        this.setState({modalNotify:'YOU WIN !!!'})
-        this.onModal()
-        num-=2
+        this.onModal('VICTORY !!!')
+        _num-=2
       }
       this.setState({
         score: _score,
@@ -407,7 +429,7 @@ export default class Single extends React.Component {
         cards: _cards,
         current_selection: _current_selection,
         selected_pairs: _selected_pairs,
-        num: _num
+        num: _num,
       })
     }
   }

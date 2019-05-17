@@ -27,22 +27,23 @@ export default class Home extends React.Component{
 var styles = StyleSheet.create({
     view:{
         flex:1,
-        backgroundColor: '#EF1457'
+        alignItems:'center',
+        backgroundColor: 'white'
     },
     img:{
         marginTop:100,
-        marginLeft:85
+        //marginLeft:85
     },  
     btns:{
-        backgroundColor: '#EF1457',
+        backgroundColor: 'white',
         marginTop:100
     },
     btn:{
-        backgroundColor:'white',
+        backgroundColor:'#EF1457',
         width:160,
         marginTop:30,
         borderRadius: 10,
-        marginLeft:100,
+        //marginLeft:100,
         padding:8 
     },
     hbtn:{
@@ -50,14 +51,14 @@ var styles = StyleSheet.create({
         width:160,
         marginTop:30,
         borderRadius: 10,
-        marginLeft:100,
+        //marginLeft:100,
         padding:8 
     },
     textBtn:{
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
-        color:'black',
+        color:'white',
     },
     textHbtn:{
         textAlign: 'center',
