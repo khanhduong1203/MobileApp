@@ -15,15 +15,21 @@ export default class ModalResult extends React.Component{
         this.setState({name:''})
     }
     onCancel = () => {
-        this.props.onModal('')
-        //this.props.navigate('Home')
+        if(this.props.text==='Game over'){
+            this.props.onModal('',false)
+            const { navigate } = this.props;
+            navigate('Home')
+        }else{
+            this.props.onModal('',false)
+            this.props.onRunning(true)
+        }
     }
     saveScore = () => {
         const {navigate} = this.props;
         if(this.state.name!==''){
             let item = {userName:this.state.name,highScore:this.props.score}
             AsyncStorage.setItem(this.state.name,JSON.stringify(item));
-            this.props.onModal('')
+            this.props.onModal('',false)
             alert("Saved"+'\n'+JSON.stringify(item))
             navigate('HighScore')
         }else{

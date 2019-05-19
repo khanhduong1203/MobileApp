@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   Text,
   StyleSheet,
-  BackHandler
+  BackHandler,
+  Alert,
+  Dimensions
 } from "react-native";
 import Leaderboard from "react-native-leaderboard";
-
+const screenWidth = Math.round(Dimensions.get('window').width);
 export default class HighScore extends React.Component {
   constructor(props) {
     super(props);
@@ -53,13 +55,30 @@ export default class HighScore extends React.Component {
     }
   }
 
-  onReload = async () => {
-    AsyncStorage.clear();
+  onReset = async () => {
+    Alert.alert(
+      'Warning',
+      'Are you sure to delete all high scores?',
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel'
+        },
+        { 
+          text: 'OK', 
+          onPress: () => {
+            AsyncStorage.clear();
+            this.setState({data:[]})
+          } 
+        }
+      ],
+      { cancelable:false }
+    )
   }
 
   render() {
     return (
-      <View>
+      <View style={{alignItems:'center'}}>
         <Text style={styles.name}>Leader Board</Text>
         <Leaderboard
           data={this.state.data}
@@ -67,8 +86,8 @@ export default class HighScore extends React.Component {
           sortBy="highScore"
         />
 
-        <TouchableOpacity onPress={this.onReload}>
-          <Text>Reload</Text>
+        <TouchableOpacity onPress={this.onReset} style={styles.reset}>
+          <Text style={styles.textBtn}>Reload</Text>
         </TouchableOpacity>
       </View>
     )
@@ -81,6 +100,20 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     backgroundColor: "#EF1457",
-    color: "white"
-  }
+    color: "white",
+    width: screenWidth
+  },
+  reset:{
+    backgroundColor:'black',
+    width:160,
+    marginTop:30,
+    borderRadius: 10,
+    padding:8 
+  },
+  textBtn:{
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+    color:'white',
+  },
 });

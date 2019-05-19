@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Button,BackHandler,Text, Alert} from 'react-native';
+import { StyleSheet, View, Button,BackHandler,Text, Alert, ImageBackground} from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons'; // 6.2.2
-
+import CountDown from 'react-native-countdown-component';
 import Header from '../components/Header';
 import Score from '../components/Score';
 import Card from '../components/Card';
@@ -226,7 +226,8 @@ export default class Single extends React.Component {
       score: 0,
       level: 1,
       turn: 3,
-      timer: 5,
+      timer: 10,
+      running:true,
       cards: clcards,
       num : 2,
       isModalVisible: false,
@@ -239,23 +240,10 @@ export default class Single extends React.Component {
         this.props.navigation.navigate('Home');
         return true;
     });
-    this.interval = setInterval(
-      () => this.setState((prevState)=> ({ timer: prevState.timer - 1 })),
-      1000
-    );
+
   }
-  componentDidUpdate(){
-    if(this.state.timer === 0){ 
-      clearInterval(this.interval);
-    }
-  }
-  
-  componentWillUnmount(){
-   clearInterval(this.interval);
-  }
-  render() { 
+  render() {
     const {navigate} = this.props.navigation;
-    //setTimeout(function(){alert('Time up')}, this.state.time);
     return (
       <View style={styles.container}>
         <Header type='Single Player' level={this.state.level} />
@@ -266,9 +254,18 @@ export default class Single extends React.Component {
         </View>
         <ModalResult style={{width:300}} isModalVisible={this.state.isModalVisible} onModal = {this.onModal} 
                      text={this.state.modalNotify} navigate = {navigate} score={this.state.score}
+                     onRunning = {this.onRunning}
         />
         <Score score={this.state.score} />
-        <Text>Time: {this.state.timer}</Text>
+        <CountDown
+          until={this.state.timer}
+          size={30}
+          onFinish={() => this.onModal('Game over',true)}
+          digitStyle={{backgroundColor: '#FFF'}}
+          digitTxtStyle={{color: '#1CC625'}}
+          timeToShow={['S']}
+          running={this.state.running}
+        />
         <Text>Turn: {this.state.turn}</Text>
         <Button
           onPress={this.stopGame}
@@ -279,33 +276,21 @@ export default class Single extends React.Component {
     );
   }
   
-  onModal = (message) =>{
+  onModal = (message,status) =>{
     this.setState({ 
       modalNotify: message,
-      isModalVisible: !this.state.isModalVisible
+      isModalVisible: status
     });
   }
 
-  stopGame =()=>{
-    this.onModal('Sure?')
+  onRunning=(status)=>{
+    this.setState({running:status})
   }
 
-  // resetCards() {
-  //   let cards = this.cards.map((obj) => {
-  //     obj.is_open = false;
-  //     return obj;
-  //   });
-
-  //   cards = cards.shuffle();
-
-  //   this.setState({
-  //     current_selection: [],
-  //     selected_pairs: [],
-  //     cards: cards,
-  //     score: 0
-  //   });
-  // }
-
+  stopGame =()=>{
+    this.setState({running:false})
+    this.onModal('Sure?',true)
+  }
 
   renderRows() {
    
@@ -319,7 +304,6 @@ export default class Single extends React.Component {
     });
    
   } 
-
 
   renderCards(cards) {
     //console.log(cards)
@@ -376,11 +360,13 @@ export default class Single extends React.Component {
     var _num = this.state.num
     var _level = this.state.level
     var _turn = this.state.turn
+    var _timer = this.state.timer
     let index = this.state.cards.findIndex((card) => { 
       return card.id == id;
     });
     if(_turn === 0){
-      this.onModal('Game Over')
+      _timer=-1
+      //('Game Over')
     }
     var _cards = this.state.cards;
     if(_cards[index].is_open === false && _selected_pairs.indexOf(_cards[index].name) === -1){
@@ -414,10 +400,12 @@ export default class Single extends React.Component {
       if(_selected_pairs.length===_num){
         _num +=2
         _level +=1
+        _turn = _num*2 
         let newCards = this.getLib(_num)
         _cards = newCards
         _selected_pairs=[]
         _current_selection=[]
+        _timer=_level*10 
       }
       if(_score==42){
         this.onModal('VICTORY !!!')
@@ -430,6 +418,8 @@ export default class Single extends React.Component {
         current_selection: _current_selection,
         selected_pairs: _selected_pairs,
         num: _num,
+        turn: _turn,
+        timer:_timer
       })
     }
   }
@@ -462,7 +452,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignSelf: 'stretch',
-    backgroundColor: '#fff'
+    backgroundColor:'#fff'
   },
   row: {
     flex: 1,
@@ -475,3 +465,18 @@ const styles = StyleSheet.create({
     marginTop: 20
   }
 });
+  // resetCards() {
+  //   let cards = this.cards.map((obj) => {
+  //     obj.is_open = false;
+  //     return obj;
+  //   });
+
+  //   cards = cards.shuffle();
+
+  //   this.setState({
+  //     current_selection: [],
+  //     selected_pairs: [],
+  //     cards: cards,
+  //     score: 0
+  //   });
+  // }
