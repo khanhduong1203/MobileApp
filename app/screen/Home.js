@@ -1,8 +1,38 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground, Dimensions} from 'react-native';
-const screenWidth = Math.round(Dimensions.get('window').width);
+import { StyleSheet, View, TouchableOpacity, Text, Image, StatusBar, Dimensions, BackHandler, Alert} from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
 
-export default class Home extends React.Component{
+const screenWidth = Math.round(Dimensions.get('window').width);
+// const Sound = require('react-native-sound');
+
+class Home extends React.Component{
+      
+    componentDidMount(){
+        StatusBar.setHidden(true);
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
+    }
+    
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
+    }
+
+    handleBackButton = () => {
+        if (this.props.isFocused){
+            Alert.alert(
+                'Exit App',
+                'Exiting the application?', [{
+                    text: 'Cancel',
+                    style: 'cancel'
+                }, {
+                    text: 'OK',
+                    onPress: () => BackHandler.exitApp()
+                }, ], {
+                    cancelable: false
+                }
+            )
+            return true;
+        }
+    } 
 
     render(){
         const {navigate} = this.props.navigation;
@@ -11,14 +41,17 @@ export default class Home extends React.Component{
                 <View style={styles.view}>
                     <Image style={styles.img} source={require('../../assets/icon.png')}/>
                     <View style={styles.btns}>
-                        <TouchableOpacity style={styles.btn} onPress={() => navigate('Single')}>
-                            <Text style={styles.textBtn}>Single Player</Text>
+                        <TouchableOpacity style={styles.btnSingle} onPress={() => navigate('Prepare')}>
+                            <Text style={styles.textBtnSingle}>Single Player</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btn2} onPress={() => navigate('Multi')}>
-                            <Text style={styles.textBtn}>Multi Players</Text>
+                        <TouchableOpacity style={styles.btnMulti} onPress={() => navigate('Multi')}>
+                            <Text style={styles.textBtnMulti}>Multi Players</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.hbtn} onPress={() => navigate('HighScore')}>
+                        <TouchableOpacity style={styles.btnHScore} onPress={() => navigate('HighScore')}>
                             <Text style={styles.textHbtn} >High Score</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.btnHelp} onPress={() => navigate('Help')}>
+                            <Text style={styles.textHelp} >Help</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -36,7 +69,6 @@ var styles = StyleSheet.create({
     view:{
         flex:1,
         alignItems:'center',
-        // backgroundColor: 'white'
     },
     img:{
         marginTop:100,
@@ -45,44 +77,51 @@ var styles = StyleSheet.create({
     btns:{
         flex:1,
         width: screenWidth ,
-        // backgroundColor: 'white',
-        // marginTop:100
     },
-    btn:{
+    btnSingle:{
         flex:1,
         backgroundColor:'#EF1457',
-        // width:160,
-        // marginTop:30,
-        //borderRadius: 10,
-        //marginLeft:100,
         padding:8 
     },
-    btn2:{
+    btnMulti:{
         flex:1,
-        backgroundColor:'#EF1457',
-        //borderRadius: 10,
-        //marginLeft:100,
+        backgroundColor:'#fff',
         padding:8 
     },
-    hbtn:{
+    btnHScore:{
         flex:1,
         backgroundColor:'green',
-        // width:160,
-        // marginTop:30,
-        //borderRadius: 10,
-        //marginLeft:100,
         padding:8 
     },
-    textBtn:{
+    btnHelp:{
+        flex:1,
+        backgroundColor:'yellow',
+        padding:8 
+    },
+    textBtnSingle:{
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         color:'white',
+    },
+    textBtnMulti:{
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        color:'#EF1457',
     },
     textHbtn:{
         textAlign: 'center',
         fontSize: 20,
         fontWeight: 'bold',
         color:'yellow',
+    },
+    textHelp:{
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: 'bold',
+        color:'green',
     }
 })
+
+export default withNavigationFocus(Home);   

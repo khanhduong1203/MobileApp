@@ -30,7 +30,7 @@ export default class ModalResult extends React.Component{
             let item = {userName:this.state.name,highScore:this.props.score}
             AsyncStorage.setItem(this.state.name,JSON.stringify(item));
             this.props.onModal('',false)
-            alert("Saved"+'\n'+JSON.stringify(item))
+            //alert("Saved"+'\n'+JSON.stringify(item))
             navigate('HighScore')
         }else{
             alert('Enter your name')

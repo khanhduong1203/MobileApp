@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button } from 'react-native';
+import { StyleSheet, View, Button, BackHandler } from 'react-native';
 import { Ionicons, FontAwesome, Entypo } from '@expo/vector-icons'; // 6.2.2
 
 import Header from '../components/Header';
@@ -21,7 +21,12 @@ export default class Multi extends React.Component {
     }
   
   }
-
+  componentWillMount() {
+    BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
+  componentWillUnmount() {
+      BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
+  }
   render() {
     return (
       <View >

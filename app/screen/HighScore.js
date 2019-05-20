@@ -29,6 +29,7 @@ export default class HighScore extends React.Component {
 
   componentWillMount() {
     this.getAllData();
+    BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
   }
 
   getAllData = async () => {
@@ -87,7 +88,7 @@ export default class HighScore extends React.Component {
         />
 
         <TouchableOpacity onPress={this.onReset} style={styles.reset}>
-          <Text style={styles.textBtn}>Reload</Text>
+          <Text style={styles.textBtn}>Reset</Text>
         </TouchableOpacity>
       </View>
     )

@@ -6,13 +6,14 @@ import Header from '../components/Header';
 import Score from '../components/Score';
 import Card from '../components/Card';
 import ModalResult from '../components/ModalResult';
-import Modal from "react-native-modal"
+import { withNavigationFocus } from 'react-navigation';
+
 //import * as cardlib from './../cardlib'
 import helper from '../helpers';
-export default class Single extends React.Component {
+class Single extends React.Component {
 
   constructor(props) {
-    super(props);
+    super(props); 
     this.renderCards = this.renderCards.bind(this);
     //this.resetCards = this.resetCards.bind(this);
     this.stopGame = this.stopGame.bind(this)
@@ -236,12 +237,40 @@ export default class Single extends React.Component {
     }
   }
   componentDidMount(){
-    BackHandler.addEventListener('hardwareBackPress',()=>{
-        this.props.navigation.navigate('Home');
-        return true;
-    });
-
+    BackHandler.addEventListener('hardwareBackPress', this.handleBackButton );
   }
+
+  componentWillUnmount(){
+    BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton );
+  }
+
+  handleBackButton = () => {
+    if (this.props.isFocused){
+      this.setState({running:false})
+      Alert.alert(
+        'Warning',
+        'Are you sure to quit this game?',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+            onPress: () => {
+              this.setState({running:true})              
+            } 
+          },
+          { 
+            text: 'OK', 
+            onPress: () => {
+              this.props.navigation.navigate('Home');
+            } 
+          }
+        ],
+        { cancelable:false }
+      )
+      return true;
+    }
+  }
+
   render() {
     const {navigate} = this.props.navigation;
     return (
@@ -256,17 +285,20 @@ export default class Single extends React.Component {
                      text={this.state.modalNotify} navigate = {navigate} score={this.state.score}
                      onRunning = {this.onRunning}
         />
-        <Score score={this.state.score} />
-        <CountDown
-          until={this.state.timer}
-          size={30}
-          onFinish={() => this.onModal('Game over',true)}
-          digitStyle={{backgroundColor: '#FFF'}}
-          digitTxtStyle={{color: '#1CC625'}}
-          timeToShow={['S']}
-          running={this.state.running}
-        />
-        <Text>Turn: {this.state.turn}</Text>
+        
+        <View style={styles.info}>
+          <Score score={this.state.score} />
+          <Text style={{fontSize: 20, fontWeight: 'bold'}}>Turn: {this.state.turn}</Text>
+          <CountDown
+            until={this.state.timer}
+            size={20}
+            onFinish={() => this.onModal('Game over',true)}
+            digitStyle={{backgroundColor: '#FFF'}}
+            digitTxtStyle={{color: '#1CC625'}}
+            timeToShow={['S']}
+            running={this.state.running}
+          />
+        </View>
         <Button
           onPress={this.stopGame}
           title="Stop"
@@ -456,13 +488,19 @@ const styles = StyleSheet.create({
   },
   row: {
     flex: 1,
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   body: {
     flex: 18,
     justifyContent: 'space-between',
     padding: 10,
     marginTop: 20
+  },
+  info:{
+    flex:1,
+    flexDirection:'row',
+    justifyContent :'space-around',
+    marginBottom:10
   }
 });
   // resetCards() {
@@ -480,3 +518,4 @@ const styles = StyleSheet.create({
   //     score: 0
   //   });
   // }
+export default withNavigationFocus(Single);
