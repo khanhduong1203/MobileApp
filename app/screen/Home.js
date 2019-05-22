@@ -44,7 +44,7 @@ class Home extends React.Component{
                         <TouchableOpacity style={styles.btnSingle} onPress={() => navigate('Prepare')}>
                             <Text style={styles.textBtnSingle}>Single Player</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.btnMulti} onPress={() => navigate('Multi')}>
+                        <TouchableOpacity style={styles.btnMulti} onPress={() => navigate('MultiLogin')}>
                             <Text style={styles.textBtnMulti}>Multi Players</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.btnHScore} onPress={() => navigate('HighScore')}>
