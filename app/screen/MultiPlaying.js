@@ -1,9 +1,7 @@
-import React, {Component} from 'react';
-import {Alert, Text, View, Dimensions, TouchableOpacity, BackHandler,
-    ToastAndroid, TouchableHighlight, StyleSheet} from 'react-native';
+import React from 'react';
+import {Alert, Text, View, BackHandler, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
-const screenWidth = Math.round(Dimensions.get('window').width);
+// const screenWidth = Math.round(Dimensions.get('window').width);
 var sk;
 
 export default class PlayScreen extends React.Component{
@@ -249,7 +247,7 @@ export default class PlayScreen extends React.Component{
       BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
   }
 
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
       BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
   }
 

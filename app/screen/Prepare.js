@@ -15,10 +15,10 @@ export default class Prepare extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
   }
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
       BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
   }
   render() {

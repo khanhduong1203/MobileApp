@@ -4,10 +4,10 @@ import { StyleSheet, View, TouchableOpacity, Text, Image, ImageBackground, Dimen
 const screenWidth = Math.round(Dimensions.get('window').width);
 
 export default class Help extends React.Component{
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
     }
-    componentWillUnmount() {
+    UNSAFE_componentWillUnmount() {
         BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
     }
     render(){

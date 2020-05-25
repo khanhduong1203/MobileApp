@@ -240,7 +240,7 @@ class Single extends React.Component {
     BackHandler.addEventListener('hardwareBackPress', this.handleBackButton );
   }
 
-  componentWillUnmount(){
+  UNSAFE_componentWillUnmount(){
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton );
   }
 

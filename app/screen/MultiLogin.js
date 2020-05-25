@@ -1,8 +1,7 @@
 import React, {Component} from 'react';
 import {Alert, Text, View, TextInput, TouchableOpacity, TouchableHighlight, StyleSheet, BackHandler} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'
+// import Icon from 'react-native-vector-icons/FontAwesome'
 import io from "socket.io-client/dist/socket.io.js";
-import { createStackNavigator, createAppContainer } from 'react-navigation';
 
 var e;
 export default class MultiScreen extends React.Component{
@@ -60,10 +59,10 @@ export default class MultiScreen extends React.Component{
     this.socket.emit("client-join", sdata)
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     BackHandler.addEventListener('hardwareBackPress', () => this.props.navigation.goBack());
   }
-  componentWillUnmount() {
+  UNSAFE_componentWillUnmount() {
       BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
   }
   render() {

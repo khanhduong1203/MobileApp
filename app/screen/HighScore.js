@@ -27,7 +27,7 @@ export default class HighScore extends React.Component {
     });
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.getAllData();
     BackHandler.removeEventListener('hardwareBackPress', () => this.props.navigation.goBack());
   }
